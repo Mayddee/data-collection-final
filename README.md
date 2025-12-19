@@ -1,130 +1,157 @@
-Project Overview 
-The goal of this project is to design and implement a complete streaming + batch data 
-pipeline using Apache Airflow, Apache Kafka, and SQLite. The pipeline demonstrates the 
-full lifecycle of frequently updated real-world data: ingestion, cleaning, storage, and 
-analytical aggregation. 
-The system consists of three Airflow DAGs: 
-1. Continuous ingestion of live cryptocurrency data from an external API into Kafka 
-2. Hourly batch processing to clean and store data in SQLite 
-3. Daily analytics job to compute aggregated metrics and store them in a summary table 
-3. API Selection and Justification 
-Chosen API 
-WazirX Cryptocurrency Tickers API 
-Endpoint: https://api.wazirx.com/api/v2/tickers 
-Justification 
-The WazirX API was selected because it fully satisfies all project requirements: 
-Frequently updated: Cryptocurrency prices change continuously and update multiple 
-times per hour 
-Stable and documented: Publicly available and widely used exchange API 
-Structured JSON format: Returns well-structured JSON objects 
-Each API call returns the latest ticker information for multiple trading pairs, including price, 
-volume, and timestamps, making it ideal for streaming and analytics use cases. 
-4. System Architecture Overview 
-The architecture follows a Lambda-style pipeline combining pseudo-streaming and batch 
-processing.  
-Data Flow 
-API → Airflow DAG 1 → Kafka (raw_events) → Airflow DAG 2 → SQLite (events) → 
-Airflow DAG 3 → SQLite (daily_summary) 
 
-## How to Run the Project
+```markdown
+# 🚀 Data Collection Final Project
 
-### 1. Create and Activate Virtual Environment
+[![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/) 
+[![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-2.8-orange?logo=apachekafka)](https://kafka.apache.org/) 
+[![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-2.7-lightgrey?logo=apacheairflow)](https://airflow.apache.org/) 
+[![SQLite](https://img.shields.io/badge/SQLite-3.41-lightblue?logo=sqlite)](https://www.sqlite.org/)
 
+---
+
+## 🌟 Project Overview
+
+This project demonstrates a **complete streaming + batch data pipeline** using **Python, Apache Airflow, Kafka, and SQLite**.  
+It covers the **full lifecycle of real-time data**: ingestion, cleaning, storage, and analytical aggregation.
+
+### Airflow DAGs
+
+1. **Continuous ingestion:** WazirX API → Kafka  
+2. **Hourly batch processing:** Kafka → SQLite (events table)  
+3. **Daily analytics:** SQLite → aggregated summary (daily_summary table)  
+
+---
+
+## 🔗 API Selection
+
+**WazirX Cryptocurrency Tickers API**  
+Endpoint: [https://api.wazirx.com/api/v2/tickers](https://api.wazirx.com/api/v2/tickers)
+
+**Why WazirX?**  
+
+- Frequently updated (prices change multiple times per hour)  
+- Stable, documented, and widely used  
+- Structured JSON output  
+- Returns real trading data: prices, volumes, timestamps  
+
+---
+
+## 🏗️ System Architecture
+
+**Lambda-style pipeline**:
+
+```
+
+WazirX API → Airflow DAG 1 → Kafka (raw_events) → Airflow DAG 2 → SQLite (events) → Airflow DAG 3 → SQLite (daily_summary)
+
+
+
+## ⚡ How to Run the Project
+
+### 1️⃣ Create & Activate Virtual Environment
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-```
+````
 
-
-
-### 2. Install Dependencies
+### 2️⃣ Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-
-
-### 3. Start Kafka (Local Setup)
-
-Kafka and Zookeeper can be started using **Docker Compose**:
+### 3️⃣ Start Kafka & Zookeeper
 
 ```bash
 docker-compose up -d
 ```
 
-Check that Kafka is running:
+* Bootstrap server: `localhost:9092`
+* Kafka topic: `raw_events`
 
-* **Bootstrap server**: `localhost:9092`
-* **Kafka topic**: `raw_events`
-
-Ensure the Docker containers for Kafka and Zookeeper are up and healthy before starting the pipeline.
-
-
-
-### 4. Run Scripts Manually (Optional – for Testing)
-
-Each job can be tested independently without Airflow:
+### 4️⃣ Run Scripts (Optional for Testing)
 
 ```bash
-python src/job1_producer.py     # WazirX API → Kafka
-python src/job2_cleaner.py      # Kafka → SQLite (events)
-python src/job3_analytics.py    # SQLite → daily_summary
+python src/job1_producer.py
+python src/job2_cleaner.py
+python src/job3_analytics.py
 ```
 
-This step is optional and mainly used for debugging and validation.
+### 5️⃣ Run Airflow
 
-
-
-### 5. Run Airflow
-
-Set Airflow home directory:
+#### Standalone Mode
 
 ```bash
 export AIRFLOW_HOME=$(pwd)/airflow
-```
-
-#### Option A: Run Airflow in Standalone Mode
-
-```bash
 airflow standalone
 ```
 
-Access Airflow Web UI at:
- [http://localhost:8080](http://localhost:8080)
+Access Web UI: [http://localhost:8080](http://localhost:8080)
 
+#### Separate Components
 
-
-#### Option B: Run Airflow Components Separately
-
-##### Start Scheduler
+* **Scheduler:**
 
 ```bash
 export AIRFLOW_HOME=$(pwd)/airflow
 airflow scheduler
 ```
 
-##### Start Web Interface
+* **Webserver:**
 
 ```bash
 export AIRFLOW_HOME=$(pwd)/airflow
 airflow webserver -p 8080
 ```
 
-Open in browser:
- [http://localhost:8080](http://localhost:8080)
+---
 
-From the web interface, all three DAGs can be triggered and monitored.
+## 📊 SQLite Schema
+
+**events Table**
+
+| Column       | Type      | Description         |
+| ------------ | --------- | ------------------- |
+| id           | INTEGER   | Primary key         |
+| symbol       | TEXT      | Trading pair symbol |
+| last_price   | REAL      | Last traded price   |
+| open_price   | REAL      | Opening price       |
+| high_price   | REAL      | Highest price       |
+| low_price    | REAL      | Lowest price        |
+| volume       | REAL      | Trading volume      |
+| quote_volume | REAL      | Quote asset volume  |
+| event_time   | TIMESTAMP | Event timestamp     |
+
+**daily_summary Table**
+
+| Column       | Type    | Description         |
+| ------------ | ------- | ------------------- |
+| summary_date | DATE    | Aggregation date    |
+| symbol       | TEXT    | Trading pair symbol |
+| avg_price    | REAL    | Average daily price |
+| min_price    | REAL    | Minimum daily price |
+| max_price    | REAL    | Maximum daily price |
+| total_volume | REAL    | Total daily volume  |
+| record_count | INTEGER | Number of records   |
 
 
 
-## Technologies Used
+## 🛠️ Technologies Used
 
 * **Python**
 * **Apache Kafka**
 * **Apache Airflow**
 * **SQLite**
 * **Pandas**
-* **WazirX Cryptocurrency Tickers API** – `https://api.wazirx.com/api/v2/tickers`
+* **WazirX Cryptocurrency Tickers API** – [https://api.wazirx.com/api/v2/tickers](https://api.wazirx.com/api/v2/tickers)
+
+
+
+
+## Notes
+
+* Ensure Kafka is running before starting Airflow DAGs.
+* Optional: test scripts individually before running scheduled DAGs.
+* All times are in UTC by default.
 
 
