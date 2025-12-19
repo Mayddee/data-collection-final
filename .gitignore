@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env
+.env.*
+
+# Airflow generated files
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.cfg
+airflow/airflow-webserver.pid
+airflow/webserver_config.py
+airflow/__pycache__/
+
+# Databases (local)
+*.db
+data/app.db
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+
+# Docker
+
+*.log
