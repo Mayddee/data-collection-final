@@ -13,10 +13,10 @@ WazirX Cryptocurrency Tickers API
 Endpoint: https://api.wazirx.com/api/v2/tickers 
 Justification 
 The WazirX API was selected because it fully satisfies all project requirements: 
- Frequently updated: Cryptocurrency prices change continuously and update multiple 
+Frequently updated: Cryptocurrency prices change continuously and update multiple 
 times per hour 
- Stable and documented: Publicly available and widely used exchange API 
- Structured JSON format: Returns well-structured JSON objects 
+Stable and documented: Publicly available and widely used exchange API 
+Structured JSON format: Returns well-structured JSON objects 
 Each API call returns the latest ticker information for multiple trading pairs, including price, 
 volume, and timestamps, making it ideal for streaming and analytics use cases. 
 4. System Architecture Overview 
