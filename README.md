@@ -1,33 +1,23 @@
 
-```markdown
-# 🚀 Data Collection Final Project
-
-[![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)](https://www.python.org/) 
-[![Apache Kafka](https://img.shields.io/badge/Apache%20Kafka-2.8-orange?logo=apachekafka)](https://kafka.apache.org/) 
-[![Apache Airflow](https://img.shields.io/badge/Apache%20Airflow-2.7-lightgrey?logo=apacheairflow)](https://airflow.apache.org/) 
-[![SQLite](https://img.shields.io/badge/SQLite-3.41-lightblue?logo=sqlite)](https://www.sqlite.org/)
-
----
-
-## 🌟 Project Overview
+🌟 Project Overview
 
 This project demonstrates a **complete streaming + batch data pipeline** using **Python, Apache Airflow, Kafka, and SQLite**.  
 It covers the **full lifecycle of real-time data**: ingestion, cleaning, storage, and analytical aggregation.
 
-### Airflow DAGs
+ Airflow DAGs
 
-1. **Continuous ingestion:** WazirX API → Kafka  
-2. **Hourly batch processing:** Kafka → SQLite (events table)  
-3. **Daily analytics:** SQLite → aggregated summary (daily_summary table)  
+1. Continuous ingestion: WazirX API → Kafka  
+2. Hourly batch processing: Kafka → SQLite (events table)  
+3. Daily analytics: SQLite → aggregated summary (daily_summary table)  
 
 ---
 
-## 🔗 API Selection
+ 🔗 API Selection
 
-**WazirX Cryptocurrency Tickers API**  
+WazirX Cryptocurrency Tickers API
 Endpoint: [https://api.wazirx.com/api/v2/tickers](https://api.wazirx.com/api/v2/tickers)
 
-**Why WazirX?**  
+Why WazirX?
 
 - Frequently updated (prices change multiple times per hour)  
 - Stable, documented, and widely used  
@@ -36,9 +26,9 @@ Endpoint: [https://api.wazirx.com/api/v2/tickers](https://api.wazirx.com/api/v2/
 
 ---
 
-## 🏗️ System Architecture
+ 🏗️ System Architecture
 
-**Lambda-style pipeline**:
+Lambda-style pipeline:
 
 ```
 
